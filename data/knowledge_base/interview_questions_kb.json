@@ -1,0 +1,104 @@
+[
+  {
+    "role": "Software Engineer",
+    "category": "technical",
+    "difficulty": "easy",
+    "content": "Software engineers are expected to demonstrate proficiency in data structures and algorithms. Common topics include arrays, linked lists, trees, graphs, hash tables, sorting algorithms (quicksort, mergesort), dynamic programming, and Big-O time/space complexity analysis. Candidates should be comfortable solving coding problems and explaining their reasoning clearly."
+  },
+  {
+    "role": "Software Engineer",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "System design interviews for software engineers assess ability to design scalable distributed systems. Key areas: load balancing, database sharding, CAP theorem, microservices vs monolith, caching strategies (Redis, Memcached), message queues (Kafka, RabbitMQ), REST vs GraphQL APIs, CDN design. Candidates should be able to design systems like URL shorteners, social feeds, or ride-sharing apps."
+  },
+  {
+    "role": "Software Engineer",
+    "category": "behavioral",
+    "difficulty": "medium",
+    "content": "Behavioral interviews for software engineers focus on collaboration, code quality, and handling technical debt. Use the STAR method: Situation, Task, Action, Result. Common questions: handling disagreements in code reviews, balancing speed vs quality, mentoring junior developers, dealing with legacy code, cross-functional team collaboration."
+  },
+  {
+    "role": "Data Scientist",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "Data scientists must demonstrate expertise in machine learning fundamentals: supervised vs unsupervised learning, overfitting/underfitting, bias-variance tradeoff, cross-validation, feature engineering, regularisation (L1/L2), gradient descent, and evaluation metrics (precision, recall, F1, ROC-AUC). Deep learning topics: CNNs, RNNs, transformers, attention mechanisms, and transfer learning."
+  },
+  {
+    "role": "Data Scientist",
+    "category": "technical",
+    "difficulty": "medium",
+    "content": "Data scientists are expected to be proficient in Python (pandas, numpy, scikit-learn, matplotlib), SQL for data querying and manipulation, and statistical analysis (hypothesis testing, A/B testing, confidence intervals). Knowledge of IBM Watson Studio, Apache Spark and cloud ML platforms is increasingly valued."
+  },
+  {
+    "role": "Data Scientist",
+    "category": "behavioral",
+    "difficulty": "medium",
+    "content": "Data science behavioral questions assess communication of complex findings to business stakeholders. Key scenarios: presenting model results to non-technical teams, handling situations where model recommendations conflict with business intuition, managing expectations about model accuracy, collaborating with data engineers, explaining why a model failed in production."
+  },
+  {
+    "role": "DevOps Engineer",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "DevOps interviews cover CI/CD pipeline design (Jenkins, GitHub Actions, GitLab CI), containerisation (Docker, Kubernetes), infrastructure as code (Terraform, Ansible), monitoring and observability (Prometheus, Grafana, ELK stack), site reliability engineering (SLAs, SLOs, error budgets), and cloud platform expertise (IBM Cloud, AWS, Azure, GCP)."
+  },
+  {
+    "role": "DevOps Engineer",
+    "category": "situational",
+    "difficulty": "hard",
+    "content": "DevOps situational questions: Production is down — describe your incident response. Expected answer covers: immediate triage, rollback strategy, communication with stakeholders, root cause analysis (RCA), post-mortem culture (blameless), and preventive measures. Candidates should demonstrate knowledge of blue-green deployments, canary releases, and feature flags."
+  },
+  {
+    "role": "Full Stack Developer",
+    "category": "technical",
+    "difficulty": "medium",
+    "content": "Full stack developer interviews test both front-end (React, Vue, Angular, HTML/CSS, JavaScript/TypeScript, responsive design, accessibility, browser performance) and back-end (Node.js, Python/Django/Flask, Java/Spring, REST APIs, authentication/authorisation, database design) skills. Candidates must also demonstrate Git, testing, and deployment knowledge."
+  },
+  {
+    "role": "Full Stack Developer",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "Advanced full stack questions cover: React performance optimisation (memo, useMemo, virtualisation), event loop and async JavaScript, system design for web apps, database indexing, SQL vs NoSQL trade-offs, JWT vs session authentication, WebSockets, micro-frontends, server-side rendering, and CDN strategies."
+  },
+  {
+    "role": "Machine Learning Engineer",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "ML engineers bridge data science and software engineering. Key areas: model deployment and serving (TensorFlow Serving, FastAPI), MLOps pipelines (MLflow, Kubeflow), model monitoring and drift detection, feature stores, model versioning, and optimising inference latency for production. IBM Granite models can be deployed via watsonx.ai for enterprise LLM applications."
+  },
+  {
+    "role": "Cloud Architect",
+    "category": "technical",
+    "difficulty": "hard",
+    "content": "Cloud architects design enterprise cloud solutions. IBM Cloud Lite services include IBM Watson services, IBM Kubernetes Service, IBM Cloud Object Storage, IBM Cloudant, and IBM Db2. Key concepts: multi-cloud and hybrid cloud strategies, VPC networking, Identity and Access Management (IAM), disaster recovery (RPO/RTO), cost optimisation, and cloud security best practices."
+  },
+  {
+    "role": "Product Manager",
+    "category": "behavioral",
+    "difficulty": "medium",
+    "content": "Product managers are evaluated on prioritisation frameworks (RICE, ICE, MoSCoW), stakeholder management, defining product roadmaps, writing PRDs (Product Requirement Documents), working with engineering and design teams, and measuring product success (KPIs, OKRs, NPS). Common questions involve trade-off decisions and handling conflicting stakeholder priorities."
+  },
+  {
+    "role": "General",
+    "category": "hr",
+    "difficulty": "easy",
+    "content": "Standard HR interview questions across all roles: Tell me about yourself (Present-Past-Future structure); Why this company/role (demonstrate research); Greatest strength (relevant to role with example); Greatest weakness (honest with mitigation); Where do you see yourself in 5 years (growth-oriented); Salary expectations (research market rates); Notice period; Reason for leaving current role (stay positive)."
+  },
+  {
+    "role": "General",
+    "category": "behavioral",
+    "difficulty": "medium",
+    "content": "STAR-method behavioral interview examples: Leadership — Tell me about a time you led a team through a difficult change. Conflict resolution — Describe a disagreement with a colleague and how you resolved it. Innovation — Give an example of when you identified a problem and created a novel solution. Failure — Tell me about a professional failure and what you learned. Adaptability — Describe a time when priorities shifted unexpectedly."
+  },
+  {
+    "role": "General",
+    "category": "situational",
+    "difficulty": "medium",
+    "content": "Industry-standard situational interview questions: If you had to deliver a project in half the usual time, what would you do? A key team member leaves mid-project — how do you handle it? You discover a critical bug an hour before launch — what is your process? A stakeholder keeps changing requirements — how do you manage this? These test prioritisation, risk management, and communication skills."
+  },
+  {
+    "role": "General",
+    "category": "technical",
+    "difficulty": "easy",
+    "content": "Questions candidates should ask interviewers: What does success look like in this role in the first 90 days? How would you describe the team culture? What are the biggest technical challenges the team is currently facing? How does the company support professional development? What is the typical career progression for this role? What does the on-call or incident response process look like?"
+  }
+]

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AICTE Interview Trainer Agent – Powered by IBM Granite</title>
+<style>
+  /* ── Reset & Base ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ibm-blue: #0062fe;
+    --ibm-blue-dark: #0043ce;
+    --ibm-cyan: #1192e8;
+    --ibm-teal: #009d9a;
+    --ibm-green: #24a148;
+    --ibm-yellow: #f1c21b;
+    --ibm-red: #da1e28;
+    --ibm-purple: #8a3ffc;
+    --bg: #f4f4f4;
+    --surface: #ffffff;
+    --border: #e0e0e0;
+    --text: #161616;
+    --muted: #6f6f6f;
+    --radius: 8px;
+  }
+  body { font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── Header ─────────────────────────────────────────────────── */
+  header { background: var(--ibm-blue); color: #fff; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  header h1 { font-size: 1.25rem; font-weight: 600; }
+  header span.badge { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.4); border-radius: 20px; padding: .2rem .75rem; font-size: .75rem; letter-spacing: .05em; }
+
+  /* ── Layout ─────────────────────────────────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ── Cards ───────────────────────────────────────────────────── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+  .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--ibm-blue); border-bottom: 2px solid var(--ibm-blue); padding-bottom: .5rem; }
+
+  /* ── Forms ───────────────────────────────────────────────────── */
+  .form-group { margin-bottom: 1rem; }
+  label { display: block; font-size: .85rem; font-weight: 500; margin-bottom: .35rem; color: var(--muted); }
+  input[type=text], input[type=number], select, textarea {
+    width: 100%; padding: .6rem .8rem; border: 1px solid var(--border);
+    border-radius: 4px; font-size: .9rem; transition: border-color .2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--ibm-blue); }
+  textarea { resize: vertical; min-height: 120px; }
+
+  /* ── Buttons ─────────────────────────────────────────────────── */
+  .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .6rem 1.4rem; border: none; border-radius: 4px; font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .2s; }
+  .btn-primary { background: var(--ibm-blue); color: #fff; }
+  .btn-primary:hover { background: var(--ibm-blue-dark); }
+  .btn-secondary { background: var(--border); color: var(--text); }
+  .btn-secondary:hover { background: #c6c6c6; }
+  .btn-success { background: var(--ibm-green); color: #fff; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ── Tabs ────────────────────────────────────────────────────── */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+  .tab { padding: .6rem 1.2rem; cursor: pointer; border-bottom: 3px solid transparent; font-size: .9rem; font-weight: 500; transition: all .2s; margin-bottom: -2px; }
+  .tab.active { border-bottom-color: var(--ibm-blue); color: var(--ibm-blue); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── Badges ──────────────────────────────────────────────────── */
+  .badge-cat { display: inline-block; padding: .15rem .6rem; border-radius: 20px; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .badge-technical { background: #d0e2ff; color: #0043ce; }
+  .badge-behavioral { background: #d9f7be; color: #1a7239; }
+  .badge-situational { background: #fff3cd; color: #7d4e00; }
+  .badge-hr { background: #f3d0f4; color: #6929c4; }
+  .badge-easy { background: #d9f7be; color: #1a7239; }
+  .badge-medium { background: #fff3cd; color: #7d4e00; }
+  .badge-hard { background: #ffd7d9; color: #a2191f; }
+
+  /* ── Question cards ──────────────────────────────────────────── */
+  .q-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; position: relative; transition: box-shadow .2s; }
+  .q-card:hover { box-shadow: 0 2px 12px rgba(0,98,254,.1); }
+  .q-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; flex-wrap: wrap; }
+  .q-num { font-weight: 700; color: var(--ibm-blue); min-width: 2rem; }
+  .q-text { font-weight: 500; line-height: 1.5; }
+  .q-keywords { font-size: .78rem; color: var(--muted); margin-top: .4rem; }
+  .q-expand { cursor: pointer; font-size: .78rem; color: var(--ibm-cyan); margin-top: .5rem; display: inline-block; }
+  .q-details { display: none; margin-top: .8rem; padding-top: .8rem; border-top: 1px solid var(--border); }
+  .q-details.open { display: block; }
+  .answer-block { background: #f0f7ff; border-left: 3px solid var(--ibm-cyan); padding: .75rem; border-radius: 0 4px 4px 0; font-size: .88rem; line-height: 1.6; margin-bottom: .6rem; }
+  .tips-block { background: #f3fdf5; border-left: 3px solid var(--ibm-green); padding: .75rem; border-radius: 0 4px 4px 0; font-size: .85rem; line-height: 1.6; }
+
+  /* ── Prep strategy ───────────────────────────────────────────── */
+  .strategy-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; white-space: pre-wrap; font-size: .88rem; line-height: 1.7; max-height: 400px; overflow-y: auto; }
+
+  /* ── Evaluation ──────────────────────────────────────────────── */
+  .score-ring { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .score-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #fff; }
+  .score-high { background: var(--ibm-green); }
+  .score-mid { background: #f1c21b; color: #161616; }
+  .score-low { background: var(--ibm-red); }
+  .feedback-list { list-style: none; }
+  .feedback-list li { padding: .3rem 0; font-size: .9rem; }
+  .feedback-list li::before { margin-right: .4rem; }
+  .feedback-list.strengths li::before { content: '✓'; color: var(--ibm-green); }
+  .feedback-list.weaknesses li::before { content: '✗'; color: var(--ibm-red); }
+
+  /* ── Loader ──────────────────────────────────────────────────── */
+  .loader { display: none; text-align: center; padding: 2rem; }
+  .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--ibm-blue); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Status bar ──────────────────────────────────────────────── */
+  #status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--text); color: #f4f4f4; font-size: .82rem; padding: .4rem 1rem; display: none; }
+  #status-bar.show { display: block; }
+
+  /* ── Results panel ───────────────────────────────────────────── */
+  #results { margin-top: 2rem; }
+  .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .results-header h2 { font-size: 1.1rem; font-weight: 600; color: var(--ibm-blue); }
+
+  /* ── File drop ───────────────────────────────────────────────── */
+  .drop-zone { border: 2px dashed var(--ibm-blue); border-radius: var(--radius); padding: 1.5rem; text-align: center; color: var(--muted); cursor: pointer; transition: background .2s; }
+  .drop-zone:hover, .drop-zone.dragover { background: #d0e2ff33; }
+  .drop-zone input[type=file] { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="6" fill="white" fill-opacity="0.15"/>
+    <path d="M16 6L26 11V21L16 26L6 21V11L16 6Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <circle cx="16" cy="16" r="4" fill="white"/>
+  </svg>
+  <h1>AICTE Interview Trainer Agent</h1>
+  <span class="badge">IBM Granite · RAG · watsonx.ai</span>
+</header>
+
+<div class="container">
+
+  <!-- Input Section -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h2>🎯 Start Your Interview Preparation</h2>
+    <div class="tabs">
+      <div class="tab active" data-tab="manual">Manual Profile</div>
+      <div class="tab" data-tab="resume-file">Upload Resume</div>
+      <div class="tab" data-tab="resume-text">Paste Resume</div>
+      <div class="tab" data-tab="evaluate">Evaluate Answer</div>
+    </div>
+
+    <!-- Tab: Manual Profile -->
+    <div class="tab-pane active" id="tab-manual">
+      <div class="grid-2">
+        <div>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="m-name" placeholder="e.g. Priya Sharma" />
+          </div>
+          <div class="form-group">
+            <label>Target Job Title *</label>
+            <input type="text" id="m-title" placeholder="e.g. Data Scientist, Backend Engineer" />
+          </div>
+          <div class="form-group">
+            <label>Experience Level *</label>
+            <select id="m-level">
+              <option value="fresher">Fresher (0 years)</option>
+              <option value="junior">Junior (1–2 years)</option>
+              <option value="mid" selected>Mid-level (3–5 years)</option>
+              <option value="senior">Senior (6–10 years)</option>
+              <option value="lead">Lead / Principal (10+ years)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>Years of Experience</label>
+            <input type="number" id="m-years" value="0" min="0" max="40" />
+          </div>
+          <div class="form-group">
+            <label>Key Skills (comma-separated)</label>
+            <input type="text" id="m-skills" placeholder="e.g. Python, AWS, Machine Learning, SQL" />
+          </div>
+          <div class="form-group">
+            <label>Number of Questions (max 15)</label>
+            <input type="number" id="m-numq" value="10" min="3" max="15" />
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="prepareManual()">🚀 Generate Interview Session</button>
+    </div>
+
+    <!-- Tab: Resume File -->
+    <div class="tab-pane" id="tab-resume-file">
+      <div class="form-group">
+        <label>Upload Resume (PDF, DOCX, TXT — max 10 MB)</label>
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('resume-file-input').click()">
+          <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc,.txt" onchange="handleFileSelect(event)" />
+          <p id="drop-label">📄 Click to browse or drag & drop your resume here</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Target Job Title (optional override)</label>
+          <input type="text" id="rf-title" placeholder="Leave blank to auto-detect from resume" />
+        </div>
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <input type="number" id="rf-numq" value="10" min="3" max="15" />
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="prepareResume()">🚀 Generate Interview Session</button>
+    </div>
+
+    <!-- Tab: Paste Resume -->
+    <div class="tab-pane" id="tab-resume-text">
+      <div class="form-group">
+        <label>Paste your resume text below</label>
+        <textarea id="rt-text" rows="8" placeholder="Paste the full text of your resume here..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Target Job Title (optional)</label>
+          <input type="text" id="rt-title" placeholder="e.g. Full Stack Developer" />
+        </div>
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <input type="number" id="rt-numq" value="10" min="3" max="15" />
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="prepareText()">🚀 Generate Interview Session</button>
+    </div>
+
+    <!-- Tab: Evaluate Answer -->
+    <div class="tab-pane" id="tab-evaluate">
+      <div class="form-group">
+        <label>Interview Question</label>
+        <input type="text" id="ev-question" placeholder="e.g. Tell me about a time you handled a difficult project..." />
+      </div>
+      <div class="form-group">
+        <label>Your Answer</label>
+        <textarea id="ev-answer" rows="6" placeholder="Type or paste your answer here..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Your Job Title (optional)</label>
+          <input type="text" id="ev-title" placeholder="For context-aware evaluation" />
+        </div>
+        <div class="form-group">
+          <label>Experience Level</label>
+          <select id="ev-level">
+            <option value="fresher">Fresher</option>
+            <option value="junior">Junior</option>
+            <option value="mid" selected>Mid-level</option>
+            <option value="senior">Senior</option>
+            <option value="lead">Lead</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="evaluateAnswer()">📊 Evaluate My Answer</button>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <p>IBM Granite is preparing your personalised interview session…</p>
+  </div>
+
+  <!-- Results -->
+  <div id="results" style="display:none;"></div>
+</div>
+
+<div id="status-bar"></div>
+
+<script>
+// ── Tab switching ────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + target).classList.add('active');
+  });
+});
+
+// ── Drag & drop ───────────────────────────────────────────────────────────────
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if (files.length) {
+    document.getElementById('resume-file-input').files = files;
+    document.getElementById('drop-label').textContent = '✅ ' + files[0].name;
+  }
+});
+function handleFileSelect(e) {
+  const f = e.target.files[0];
+  if (f) document.getElementById('drop-label').textContent = '✅ ' + f.name;
+}
+
+// ── Status bar ────────────────────────────────────────────────────────────────
+function showStatus(msg, dur = 4000) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.classList.add('show');
+  if (dur) setTimeout(() => bar.classList.remove('show'), dur);
+}
+
+// ── Loading state ─────────────────────────────────────────────────────────────
+function setLoading(active) {
+  document.getElementById('loader').style.display = active ? 'block' : 'none';
+  document.getElementById('results').style.display = active ? 'none' : '';
+  document.querySelectorAll('.btn-primary').forEach(b => b.disabled = active);
+}
+
+// ── API call helpers ──────────────────────────────────────────────────────────
+async function postJSON(url, data) {
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: resp.statusText }));
+    throw new Error(err.error || resp.statusText);
+  }
+  return resp.json();
+}
+
+async function postForm(url, formData) {
+  const resp = await fetch(url, { method: 'POST', body: formData });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: resp.statusText }));
+    throw new Error(err.error || resp.statusText);
+  }
+  return resp.json();
+}
+
+// ── Prepare from manual profile ───────────────────────────────────────────────
+async function prepareManual() {
+  const name = document.getElementById('m-name').value.trim() || 'Candidate';
+  const job_title = document.getElementById('m-title').value.trim();
+  const experience_level = document.getElementById('m-level').value;
+  const years_of_experience = parseInt(document.getElementById('m-years').value) || 0;
+  const skills = document.getElementById('m-skills').value.split(',').map(s => s.trim()).filter(Boolean);
+  const num_questions = parseInt(document.getElementById('m-numq').value) || 10;
+  if (!job_title) { showStatus('⚠ Please enter a target job title.'); return; }
+  setLoading(true);
+  try {
+    const session = await postJSON('/api/prepare/profile', { name, job_title, experience_level, years_of_experience, skills, num_questions });
+    renderSession(session);
+  } catch (e) { showStatus('❌ ' + e.message, 6000); } finally { setLoading(false); }
+}
+
+// ── Prepare from resume file ───────────────────────────────────────────────────
+async function prepareResume() {
+  const fileInput = document.getElementById('resume-file-input');
+  if (!fileInput.files.length) { showStatus('⚠ Please select a resume file.'); return; }
+  const formData = new FormData();
+  formData.append('resume', fileInput.files[0]);
+  const title = document.getElementById('rf-title').value.trim();
+  if (title) formData.append('job_title', title);
+  formData.append('num_questions', document.getElementById('rf-numq').value);
+  setLoading(true);
+  try {
+    const session = await postForm('/api/prepare/resume', formData);
+    renderSession(session);
+  } catch (e) { showStatus('❌ ' + e.message, 6000); } finally { setLoading(false); }
+}
+
+// ── Prepare from pasted text ───────────────────────────────────────────────────
+async function prepareText() {
+  const resume_text = document.getElementById('rt-text').value.trim();
+  const job_title = document.getElementById('rt-title').value.trim();
+  const num_questions = parseInt(document.getElementById('rt-numq').value) || 10;
+  if (!resume_text) { showStatus('⚠ Please paste your resume text.'); return; }
+  setLoading(true);
+  try {
+    const session = await postJSON('/api/prepare/text', { resume_text, job_title, num_questions });
+    renderSession(session);
+  } catch (e) { showStatus('❌ ' + e.message, 6000); } finally { setLoading(false); }
+}
+
+// ── Evaluate answer ────────────────────────────────────────────────────────────
+async function evaluateAnswer() {
+  const question = document.getElementById('ev-question').value.trim();
+  const user_answer = document.getElementById('ev-answer').value.trim();
+  if (!question || !user_answer) { showStatus('⚠ Both question and answer are required.'); return; }
+  const profile = {
+    name: '', job_title: document.getElementById('ev-title').value.trim(),
+    experience_level: document.getElementById('ev-level').value,
+  };
+  setLoading(true);
+  try {
+    const fb = await postJSON('/api/evaluate', { question, user_answer, profile });
+    renderEvaluation(fb, question);
+  } catch (e) { showStatus('❌ ' + e.message, 6000); } finally { setLoading(false); }
+}
+
+// ── Render session ─────────────────────────────────────────────────────────────
+function renderSession(session) {
+  const el = document.getElementById('results');
+  el.style.display = 'block';
+  const profile = session.profile || {};
+  let html = `
+    <div class="results-header">
+      <h2>Interview Session — ${escHtml(profile.job_title || 'Role')} (${escHtml(profile.experience_level || '')})</h2>
+      <span style="font-size:.85rem;color:var(--muted)">${session.total_questions} questions</span>
+    </div>`;
+
+  // Questions
+  html += `<div class="card" style="margin-bottom:1.5rem;"><h2>📋 Interview Questions</h2>`;
+  (session.questions || []).forEach((q, i) => {
+    html += `
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-num">${i+1}.</span>
+        <span class="badge-cat badge-${q.category}">${q.category}</span>
+        <span class="badge-cat badge-${q.difficulty}">${q.difficulty}</span>
+      </div>
+      <div class="q-text">${escHtml(q.question)}</div>
+      ${q.keywords && q.keywords.length ? `<div class="q-keywords">Keywords: ${q.keywords.map(escHtml).join(' · ')}</div>` : ''}
+      <span class="q-expand" onclick="toggleDetails(this)">▼ Show model answer &amp; tips</span>
+      <div class="q-details">
+        ${q.model_answer ? `<div style="margin-bottom:.5rem;"><strong>Model Answer:</strong></div><div class="answer-block">${escHtml(q.model_answer)}</div>` : ''}
+        ${q.follow_up ? `<div style="margin-bottom:.5rem;font-size:.85rem;"><strong>Follow-up:</strong> ${escHtml(q.follow_up)}</div>` : ''}
+        ${q.improvement_tips ? `<div style="margin-bottom:.4rem;"><strong>Improvement Tips:</strong></div><div class="tips-block">${escHtml(q.improvement_tips)}</div>` : ''}
+        <button class="btn btn-secondary" style="margin-top:.75rem;font-size:.8rem;" onclick="practiceQuestion(${i}, this)">
+          🎤 Practice this question
+        </button>
+        <div class="practice-area" style="display:none;margin-top:.75rem;">
+          <textarea class="practice-input" rows="4" style="width:100%;margin-bottom:.5rem;" placeholder="Type your answer here..."></textarea>
+          <button class="btn btn-success" style="font-size:.8rem;" onclick="submitPractice(${i}, this)">📊 Get Feedback</button>
+          <div class="practice-feedback" style="margin-top:.75rem;"></div>
+        </div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Prep Strategy
+  if (session.preparation_strategy) {
+    html += `<div class="card" style="margin-bottom:1.5rem;">
+      <h2>📅 7-Day Preparation Strategy</h2>
+      <div class="strategy-block">${escHtml(session.preparation_strategy)}</div>
+    </div>`;
+  }
+
+  // Industry Insights
+  if (session.industry_insights) {
+    html += `<div class="card">
+      <h2>🏭 Industry Insights</h2>
+      <div class="strategy-block">${escHtml(session.industry_insights)}</div>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+  el.scrollIntoView({ behavior: 'smooth' });
+
+  // Store session for practice mode
+  window._currentSession = session;
+}
+
+// ── Render evaluation ──────────────────────────────────────────────────────────
+function renderEvaluation(fb, question) {
+  const el = document.getElementById('results');
+  el.style.display = 'block';
+  const score = fb.score || 0;
+  const scoreClass = score >= 7 ? 'score-high' : score >= 4 ? 'score-mid' : 'score-low';
+  el.innerHTML = `
+    <div class="card">
+      <h2>📊 Answer Evaluation</h2>
+      <p style="color:var(--muted);margin-bottom:1rem;font-size:.9rem;"><strong>Q:</strong> ${escHtml(question)}</p>
+      <div class="score-ring">
+        <div class="score-circle ${scoreClass}">${score}/10</div>
+        <div>
+          <strong>${score >= 7 ? 'Great Answer!' : score >= 4 ? 'Good — Room to Improve' : 'Needs Work'}</strong>
+          <p style="color:var(--muted);font-size:.85rem;">IBM Granite evaluated your response</p>
+        </div>
+      </div>
+      ${renderFeedbackList('✓ Strengths', fb.strengths, 'strengths')}
+      ${renderFeedbackList('✗ Areas to Improve', fb.weaknesses, 'weaknesses')}
+      ${fb.improved_answer ? `<div style="margin-top:1rem;"><strong>Improved Answer:</strong><div class="answer-block" style="margin-top:.5rem;">${escHtml(fb.improved_answer)}</div></div>` : ''}
+      ${fb.tips && fb.tips.length ? `<div style="margin-top:1rem;"><strong>Tips:</strong><ul class="feedback-list strengths" style="margin-top:.4rem;">${fb.tips.map(t => `<li>${escHtml(t)}</li>`).join('')}</ul></div>` : ''}
+    </div>`;
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderFeedbackList(title, items, cls) {
+  if (!items || !items.length) return '';
+  return `<div style="margin-top:.75rem;"><strong>${title}:</strong>
+    <ul class="feedback-list ${cls}" style="margin-top:.4rem;">${items.map(i => `<li>${escHtml(i)}</li>`).join('')}</ul></div>`;
+}
+
+// ── Toggle question details ────────────────────────────────────────────────────
+function toggleDetails(el) {
+  const details = el.nextElementSibling;
+  const open = details.classList.toggle('open');
+  el.textContent = open ? '▲ Hide model answer & tips' : '▼ Show model answer & tips';
+}
+
+// ── Practice mode per question ────────────────────────────────────────────────
+function practiceQuestion(idx, btn) {
+  const card = btn.closest('.q-card');
+  const area = card.querySelector('.practice-area');
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitPractice(idx, btn) {
+  const card = btn.closest('.q-card');
+  const answer = card.querySelector('.practice-input').value.trim();
+  const feedbackEl = card.querySelector('.practice-feedback');
+  if (!answer) { feedbackEl.innerHTML = '<p style="color:var(--ibm-red)">Please type your answer first.</p>'; return; }
+  const session = window._currentSession;
+  const question = session && session.questions[idx] ? session.questions[idx].question : '';
+  const profile = session ? session.profile : null;
+  feedbackEl.innerHTML = '<div class="spinner" style="width:24px;height:24px;"></div>';
+  btn.disabled = true;
+  try {
+    const fb = await postJSON('/api/evaluate', { question, user_answer: answer, profile });
+    const score = fb.score || 0;
+    const scoreClass = score >= 7 ? 'score-high' : score >= 4 ? 'score-mid' : 'score-low';
+    feedbackEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;">
+        <div class="score-circle ${scoreClass}" style="width:44px;height:44px;font-size:1rem;">${score}/10</div>
+        <strong>${score >= 7 ? 'Excellent!' : score >= 4 ? 'Good effort' : 'Keep practising'}</strong>
+      </div>
+      ${renderFeedbackList('Strengths', fb.strengths, 'strengths')}
+      ${renderFeedbackList('Improve', fb.weaknesses, 'weaknesses')}
+      ${fb.improved_answer ? `<div class="answer-block" style="margin-top:.5rem;">${escHtml(fb.improved_answer)}</div>` : ''}`;
+  } catch (e) { feedbackEl.innerHTML = `<p style="color:var(--ibm-red)">${escHtml(e.message)}</p>`; }
+  finally { btn.disabled = false; }
+}
+
+// ── Utility ───────────────────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
